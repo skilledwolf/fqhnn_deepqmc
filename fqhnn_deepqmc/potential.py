@@ -119,7 +119,8 @@ def pairwise_distances(R: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """
     diff = R[:, :, None, :] - R[:, None, :, :]
     r2 = jnp.sum(diff**2, axis=-1)
-    r = jnp.sqrt(jnp.maximum(r2, 0.0))
+    # Add a tiny epsilon to avoid singular gradients on the diagonal (r=0).
+    r = jnp.sqrt(jnp.maximum(r2, 0.0) + 1e-12)
     return r, diff
 
 

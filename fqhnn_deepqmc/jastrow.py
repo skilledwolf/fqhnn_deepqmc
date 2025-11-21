@@ -7,7 +7,8 @@ def pairwise_distances(R: jnp.ndarray) -> jnp.ndarray:
     """Pairwise distances r_ij for a batch of configurations."""
     diff = R[:, :, None, :] - R[:, None, :, :]
     r2 = jnp.sum(diff**2, axis=-1)
-    return jnp.sqrt(jnp.maximum(r2, 0.0))
+    # epsilon keeps gradients finite on the diagonal (r=0)
+    return jnp.sqrt(jnp.maximum(r2, 0.0) + 1e-12)
 
 
 def jastrow_log(R: jnp.ndarray, alpha: float, beta: float = 0.25) -> jnp.ndarray:
