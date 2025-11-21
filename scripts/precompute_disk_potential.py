@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import numpy as np
 from scipy import integrate, special
-from typing import Tuple
 
 
 def Vc_r(r: float, N: int, a: float, d: float) -> float:
@@ -41,8 +40,14 @@ def Vc_r(r: float, N: int, a: float, d: float) -> float:
         prefactor = 4.0 / np.sqrt(C + D)
         return rp * prefactor * special.ellipk(m)
 
-    val, _ = integrate.quad(integrand, 0.0, a,
-                            epsabs=1e-9, epsrel=1e-7, limit=200)
+    val, _ = integrate.quad(
+        integrand,
+        0.0,
+        a,
+        epsabs=1e-9,
+        epsrel=1e-7,
+        limit=200,
+    )
     return -N / (np.pi * a * a) * val
 
 
@@ -80,20 +85,25 @@ def main():
     nonfinite = ~np.isfinite(V_vals)
     if np.any(nonfinite):
         n_bad = int(np.sum(nonfinite))
-        raise RuntimeError(f"Found {n_bad} non-finite Vc values; investigate instead of interpolating.")
+        raise RuntimeError(
+            f"Found {n_bad} non-finite Vc values; investigate instead of interpolating."
+        )
 
     # Quick analytic sanity checks.
     V0_expected = -(2.0 * N / (a * a)) * (np.sqrt(d * d + a * a) - d)
     V0_err = abs(V_vals[0] - V0_expected)
     if V0_err > 1e-5:
-        raise RuntimeError(f"V_c(0) mismatch: computed {V_vals[0]:.8f}, expected {V0_expected:.8f} (|Δ|={V0_err:.2e}).")
+        raise RuntimeError(
+            f"V_c(0) mismatch: computed {V_vals[0]:.8f}, expected {V0_expected:.8f} "
+            f"(|Δ|={V0_err:.2e})."
+        )
 
     tail_target = -N / np.sqrt(d * d + r_max * r_max)
     tail_rel_err = abs(V_vals[-1] - tail_target) / max(abs(tail_target), 1e-12)
     if tail_rel_err > 1e-3:
         raise RuntimeError(
-            f"Tail mismatch at r={r_max:.3f}: computed {V_vals[-1]:.8f}, target {tail_target:.8f} "
-            f"(rel err {tail_rel_err:.2e})."
+            f"Tail mismatch at r={r_max:.3f}: computed {V_vals[-1]:.8f}, "
+            f"target {tail_target:.8f} (rel err {tail_rel_err:.2e})."
         )
 
     np.savez(

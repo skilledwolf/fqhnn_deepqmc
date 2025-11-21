@@ -82,7 +82,7 @@ class FQHPsiformerAnsatz(Ansatz):
         self,
         params: dict,
         phys_conf: PhysicalConfiguration,
-        return_mos: bool = False,
+        return_mos: bool = False,  # kept for Ansatz API compatibility
     ) -> Psi:
         R = phys_conf.r[..., :2]
         if R.ndim == 2:

@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Tuple
-import numpy as np
+
 import jax.numpy as jnp
+import numpy as np
 
 from .geometry import disk_radius_for_filling
 
@@ -55,7 +56,9 @@ def load_disk_potential(
     finite = np.isfinite(V_grid_np)
     if not np.all(finite):
         if not allow_repair:
-            raise RuntimeError("Non-finite entries in disk potential table — check precompute step.")
+            raise RuntimeError(
+                "Non-finite entries in disk potential table — check precompute step."
+            )
         V_grid_np = np.interp(r_grid_np, r_grid_np[finite], V_grid_np[finite])
 
     a = float(_get("a"))
@@ -102,10 +105,9 @@ def disk_potential_single(r: jnp.ndarray, table: DiskPotentialTable) -> jnp.ndar
 
 def disk_potential_energy(R: jnp.ndarray, table: DiskPotentialTable, lam: float) -> jnp.ndarray:
     """Electron–background energy: V_c = λ Σ_j V_c(|r_j|)."""
-    r = jnp.sqrt(jnp.sum(R**2, axis=-1))          # [B, N]
-    V_each = disk_potential_single(r, table)      # [B, N]
+    r = jnp.sqrt(jnp.sum(R**2, axis=-1))  # [B, N]
+    V_each = disk_potential_single(r, table)  # [B, N]
     return lam * jnp.sum(V_each, axis=-1)
-
 
 
 def pairwise_distances(R: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
@@ -131,7 +133,6 @@ def electron_electron_potential(R: jnp.ndarray, lam: float) -> jnp.ndarray:
     mask = jnp.triu(jnp.ones((N, N), dtype=bool), k=1)
     inv_r = jnp.where(mask[None, :, :], 1.0 / (r + 1e-12), 0.0)
     return lam * jnp.sum(inv_r, axis=(1, 2))
-
 
 
 def background_self_energy(N: int, a: float, lam: float, epsilon: float = 1.0) -> float:

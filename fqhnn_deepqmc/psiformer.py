@@ -8,7 +8,9 @@ import jax.numpy as jnp
 
 # Avoid truncated normal (uses erf not supported on Metal); use normal init instead.
 DEFAULT_W_INIT = hk.initializers.VarianceScaling(
-    scale=1.0, mode="fan_in", distribution="normal"
+    scale=1.0,
+    mode="fan_in",
+    distribution="normal",
 )
 
 
@@ -124,8 +126,16 @@ class PsiformerCore(hk.Module):
 
         n_orb = self.n_orbitals
 
-        real_head = hk.Linear(self.n_dets * n_orb, name="real_orbitals", w_init=DEFAULT_W_INIT)
-        imag_head = hk.Linear(self.n_dets * n_orb, name="imag_orbitals", w_init=DEFAULT_W_INIT)
+        real_head = hk.Linear(
+            self.n_dets * n_orb,
+            name="real_orbitals",
+            w_init=DEFAULT_W_INIT,
+        )
+        imag_head = hk.Linear(
+            self.n_dets * n_orb,
+            name="imag_orbitals",
+            w_init=DEFAULT_W_INIT,
+        )
 
         orb_r = real_head(h).reshape(B, N, self.n_dets, n_orb)
         orb_i = imag_head(h).reshape(B, N, self.n_dets, n_orb)
