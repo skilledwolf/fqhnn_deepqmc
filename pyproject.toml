@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fqhnn_deepqmc"
+version = "0.1.0"
+description = "Fractional quantum Hall Psiformer VMC reimplemented on deepqmc primitives"
+requires-python = ">=3.11"
+dependencies = [
+  "deepqmc>=1.2.0",
+  "jax>=0.8.1",
+  "jaxlib>=0.8.1",
+  "jax-metal; platform_system=='Darwin'",
+  "dm-haiku>=0.0.15",
+  "kfac-jax>=0.0.7",
+  "numpy>=1.26",
+  "scipy>=1.16",
+  "matplotlib>=3.8",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = ["ipython"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fqhnn_deepqmc*"]

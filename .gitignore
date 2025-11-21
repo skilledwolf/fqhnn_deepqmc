@@ -1,0 +1,46 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+
+# Packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Logs and editor temp files
+logs/
+*.log
+*.tmp
+*.swp
+*.swo
+
+# IDE/editor settings
+.vscode/
+.idea/
+.DS_Store
+.ipynb_checkpoints/
+
+# Project outputs (generated data, checkpoints, runs)
+checkpoints/
+runs/
+plots/
+data/
+archive/
+Archive.zip
